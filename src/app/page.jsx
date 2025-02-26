@@ -1,4 +1,6 @@
 "use client";
+import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import React from "react";
 
 function MainComponent() {
@@ -73,12 +75,12 @@ function MainComponent() {
             </div>
           </div>
           <div className="space-x-4">
-            <a
+            <Link
               href="/about"
               className="text-[#FF0000] hover:text-[#FF3333] transition-colors duration-300"
             >
               About
-            </a>
+            </Link>
           </div>
         </nav>
       </header>
