@@ -7,7 +7,7 @@ function MainComponent() {
   const [media, setMedia] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const contractAddress = "0xDbC1BaCfF6C9039A8Fc9C3D75D2EA904adEe6347";
 
   const handleCopy = () => {
