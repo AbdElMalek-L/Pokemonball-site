@@ -196,51 +196,60 @@ function MainComponent() {
             </div>
           </div>
         </section>
-        <section className="bg-white py-20">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-8 transform hover:scale-105 transition-transform duration-300">
-              <p className="text-gray-700 mb-2">Contract Address</p>
-              <div className="flex justify-center items-center space-x-2">
-                <code className="bg-gray-100 px-4 py-2 rounded">
-                  {contractAddress}
-                </code>
-                <button
-                  onClick={handleCopy}
-                  className="text-[#FF0000] transition-transform duration-300 hover:scale-110"
-                >
-                  <i className={`fas ${copied ? "fa-check" : "fa-copy"}`}>{icons.copy}</i>
-                </button>
-              </div>
-            </div>
-            <div className="text-center">
-              <button className="bg-[#FF0000] text-white px-8 py-3 rounded-md hover:bg-[#FF3333] transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-                Get POKEMONBALL
+        <section className="bg-gray-100 py-12 md:py-16">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-[#FF0000] mb-6 md:mb-8">
+              Contract Address
+            </h2>
+            <div className="flex flex-col md:flex-row items-center justify-center space-y-2 md:space-y-0 md:space-x-4">
+              <span className="text-sm md:text-base text-gray-600 break-all">
+                {contractAddress}
+              </span>
+              <button
+                onClick={handleCopy}
+                className="text-[#FF0000] hover:text-[#FF3333] transition-all duration-300 p-2"
+              >
+                {copied ? (
+                  <svg viewBox="0 0 512 512" className="w-4 h-4 fill-current">
+                    <path d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 448 512" className="w-4 h-4 fill-current">
+                    <path d="M384 336H192c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16h140.1l67.9 67.9V320c0 8.8-7.2 16-16 16zm-192 48h192c35.3 0 64-28.7 64-64V115.9L371.9 32H192c-35.3 0-64 28.7-64 64v224c0 35.3 28.7 64 64 64z" />
+                  </svg>
+                )}
               </button>
             </div>
           </div>
         </section>
-        <section>
-          <div className="relative">
-            <video
-              className="w-full max-w-md mx-auto rounded-2xl shadow-xl"
-              autoPlay
-              loop
-              playsInline
-              muted={isMuted}
-              src="https://raw.githubusercontent.com/AbdElMalek-L/Pokemonball-site/master/Pokemonball.mp4"
-            >
-              Your browser does not support the video tag.
-            </video>
-            <button
-              onClick={() => setIsMuted(!isMuted)}
-              className="absolute bottom-4 right-4 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-all duration-300"
-            >
-              <i
-                className={`fas ${
-                  isMuted ? "fa-volume-mute" : "fa-volume-up"
-                } text-[#FF0000]`}
-              >{icons.volumeMute}</i>
-            </button>
+        <section className="bg-white py-12 md:py-20">
+          <div className="container mx-auto px-4">
+            <div className="relative max-w-3xl mx-auto">
+              <video
+                className="w-full rounded-xl md:rounded-2xl shadow-xl"
+                autoPlay
+                loop
+                playsInline
+                muted={isMuted}
+                src="https://raw.githubusercontent.com/AbdElMalek-L/Pokemonball-site/master/Pokemonball.mp4"
+              >
+                Your browser does not support the video tag.
+              </video>
+              <button
+                onClick={() => setIsMuted(!isMuted)}
+                className="absolute bottom-2 right-2 md:bottom-4 md:right-4 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-all duration-300"
+              >
+                {isMuted ? (
+                  <svg viewBox="0 0 512 512" className="w-4 h-4 fill-current">
+                    <path d="M215.03 71.05L126.06 160H24c-13.26 0-24 10.74-24 24v144c0 13.25 10.74 24 24 24h102.06l88.97 88.95c15.03 15.03 40.97 4.47 40.97-16.97V88.02c0-21.46-25.96-31.98-40.97-16.97zM461.64 256l45.64-45.64c6.3-6.3 6.3-16.52 0-22.82l-22.82-22.82c-6.3-6.3-16.52-6.3-22.82 0L416 210.36l-45.64-45.64c-6.3-6.3-16.52-6.3-22.82 0l-22.82 22.82c-6.3 6.3-6.3 16.52 0 22.82L370.36 256l-45.64 45.64c-6.3 6.3-6.3 16.52 0 22.82l22.82 22.82c6.3 6.3 16.52 6.3 22.82 0L416 301.64l45.64 45.64c6.3 6.3 16.52 6.3 22.82 0l22.82-22.82c6.3-6.3 6.3-16.52 0-22.82L461.64 256z" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 576 512" className="w-4 h-4 fill-current">
+                    <path d="M215.03 71.05L126.06 160H24c-13.26 0-24 10.74-24 24v144c0 13.25 10.74 24 24 24h102.06l88.97 88.95c15.03 15.03 40.97 4.47 40.97-16.97V88.02c0-21.46-25.96-31.98-40.97-16.97zm233.32-51.08c-11.17-7.33-26.18-4.24-33.51 6.95-7.34 11.17-4.22 26.18 6.95 33.51 66.27 43.49 105.82 116.6 105.82 195.58 0 78.98-39.55 152.09-105.82 195.58-11.17 7.32-14.29 22.34-6.95 33.5 7.04 10.71 21.93 14.56 33.51 6.95C528.27 439.58 576 351.33 576 256S528.27 72.43 448.35 19.97z" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
         </section>
         <section className="py-20 bg-gray-50">
