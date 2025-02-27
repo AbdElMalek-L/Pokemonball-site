@@ -2,16 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import React from "react";
 
-// localStorage key constants
-const DB_KEY = 'crypto_db';
-const CREDENTIALS_KEY = 'admin_credentials';
-
-// Initial database structure
-const INITIAL_DB = {
-  media: [],
-  exchanges: [],
-  credentials: { email: 'admin@example.com', password: 'admin' }
-};
+import { useUpload } from "../../utilities/runtime-helpers";
 
 function MainComponent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -27,6 +18,7 @@ function MainComponent() {
   const [showAddMedia, setShowAddMedia] = useState(false);
   const [showAddExchange, setShowAddExchange] = useState(false);
   const [editingExchange, setEditingExchange] = useState(null);
+  const [uploadLoading, setUploadLoading] = useState(false);
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -42,121 +34,134 @@ function MainComponent() {
     logo_url: "",
     status: "coming_soon",
   });
+  const [upload] = useUpload();
 
-  // Initialize database
-  const initializeDB = () => {
-    if (!localStorage.getItem(DB_KEY)) {
-      localStorage.setItem(DB_KEY, JSON.stringify(INITIAL_DB));
+  const handleLogout = useCallback(async () => {
+    try {
+      setIsAuthenticated(false);
+      setIsVisible(false);
+      setCredentials({
+        email: "",
+        password: "",
+        newPassword: "",
+      });
+      setMedia([]);
+      setExchanges([]);
+      setActiveTab("exchanges");
+    } catch (err) {
+      console.error("Logout error:", err);
+      setError("Failed to logout");
     }
-  };
-
-  // Database operations
-  const getDB = () => JSON.parse(localStorage.getItem(DB_KEY));
-  const updateDB = (newData) => localStorage.setItem(DB_KEY, JSON.stringify(newData));
-
-  const handleLogout = useCallback(() => {
-    setIsAuthenticated(false);
-    setIsVisible(false);
-    setCredentials({ email: "", password: "", newPassword: "" });
   }, []);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoginError(null);
-    
-    const db = getDB();
-    const storedCreds = db.credentials;
-
-    if (credentials.email === storedCreds.email && 
-        credentials.password === storedCreds.password) {
-      setIsAuthenticated(true);
-      if (credentials.password === "admin") {
-        setLoginError("Using default credentials. Please change your password.");
-        setShowChangePassword(true);
+    try {
+      if (!credentials.email || !credentials.password) {
+        setLoginError("Please enter both username and password");
+        return;
       }
-    } else {
-      setLoginError("Invalid credentials");
+
+      const response = await fetch("../api/admin-auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "login",
+          email: credentials.email.trim(),
+          password: credentials.password.trim(),
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setIsAuthenticated(true);
+        if (credentials.password.trim() === "admin") {
+          setLoginError(
+            "Using default credentials. Please change your password."
+          );
+          setShowChangePassword(true);
+        }
+      } else {
+        setLoginError(data.error || "Invalid credentials");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setLoginError("Login failed. Please try again.");
     }
   };
 
-  const handleChangePassword = (e) => {
+  const handleChangePassword = async (e) => {
     e.preventDefault();
-    const db = getDB();
-    
-    if (credentials.password !== db.credentials.password) {
-      setLoginError("Current password is incorrect");
-      return;
+    setLoginError(null);
+    try {
+      const response = await fetch("../api/admin-auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "change-credentials",
+          email: credentials.email,
+          password: credentials.password,
+          newPassword: credentials.newPassword,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setSuccessMessage("Password changed successfully");
+        setShowChangePassword(false);
+        setCredentials((prev) => ({
+          ...prev,
+          newPassword: "",
+        }));
+        fetchMedia();
+        fetchExchanges();
+      } else {
+        setLoginError(data.error || "Failed to change password");
+      }
+    } catch (err) {
+      console.error(err);
+      setLoginError("Password change failed");
     }
-
-    const updatedDB = {
-      ...db,
-      credentials: { ...db.credentials, password: credentials.newPassword }
-    };
-    
-    updateDB(updatedDB);
-    setSuccessMessage("Password changed successfully");
-    setShowChangePassword(false);
-    setCredentials(prev => ({ ...prev, newPassword: "" }));
   };
 
-  const fetchMedia = useCallback(() => {
-    const db = getDB();
-    setMedia(db.media);
-    setLoading(false);
+  const fetchExchanges = useCallback(async () => {
+    try {
+      const response = await fetch("/api/get-exchanges", { method: "POST" });
+      if (!response.ok) {
+        throw new Error(`Error fetching exchanges: ${response.status}`);
+      }
+      const data = await response.json();
+      setExchanges(data.exchanges);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load exchanges");
+    }
   }, []);
 
-  const fetchExchanges = useCallback(() => {
-    const db = getDB();
-    setExchanges(db.exchanges);
+  const fetchMedia = useCallback(async () => {
+    try {
+      const response = await fetch("/api/get-admin-media", { method: "POST" });
+      if (!response.ok) {
+        throw new Error(`Error fetching media: ${response.status}`);
+      }
+      const data = await response.json();
+      setMedia(data.media);
+    } catch (err) {
+      console.error(err);
+      setError("Failed to load media");
+    } finally {
+      setLoading(false);
+    }
   }, []);
-
-  const handleAddMedia = async (e) => {
-    e.preventDefault();
-    const db = getDB();
-    
-    const newMediaItem = {
-      id: Date.now(),
-      ...newMedia,
-      file: newMedia.file ? await readFileAsURL(newMedia.file) : null,
-    };
-
-    updateDB({ ...db, media: [...db.media, newMediaItem] });
-    setMedia(prev => [...prev, newMediaItem]);
-    setShowAddMedia(false);
-    setNewMedia({ title: "", description: "", file: null });
-  };
-
-  const handleAddExchange = (e) => {
-    e.preventDefault();
-    const db = getDB();
-    
-    const newExchangeItem = {
-      id: Date.now(),
-      ...newExchange,
-    };
-
-    updateDB({ ...db, exchanges: [...db.exchanges, newExchangeItem] });
-    setExchanges(prev => [...prev, newExchangeItem]);
-    setShowAddExchange(false);
-    setNewExchange({ name: "", logo_url: "", status: "coming_soon" });
-  };
-
-  const readFileAsURL = (file) => {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = (e) => resolve(e.target.result);
-      reader.readAsDataURL(file);
-    });
-  };
 
   useEffect(() => {
-    initializeDB();
-    if (isAuthenticated) {
+    if (isAuthenticated && !showChangePassword) {
       setIsVisible(true);
       fetchMedia();
       fetchExchanges();
     }
-  }, [isAuthenticated, fetchMedia, fetchExchanges]);
+  }, [isAuthenticated, showChangePassword, fetchMedia, fetchExchanges]);
 
   if (!isAuthenticated) {
     return (
