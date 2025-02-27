@@ -124,10 +124,10 @@ function MainComponent() {
           </a>
           <div className="space-x-4">
             <a
-              href="/"
+              href="/about"
               className="text-sm md:text-base text-[#FF0000] hover:text-[#FF3333] transition-colors duration-300"
             >
-              Home
+              About
             </a>
           </div>
         </div>
