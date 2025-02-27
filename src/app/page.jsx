@@ -110,28 +110,28 @@ function MainComponent() {
     <div className="min-h-screen bg-white font-inter">
       <CurrencySnow />
       <CurrencySnow />
-      <header className="fixed w-full z-50">
-        <nav className="w-screen px-4 py-4 flex justify-between items-center backdrop-blur-md bg-white/80 border-b border-white/30 shadow-lg">
-          <div className="flex items-center">
+      <nav className="fixed w-full z-50 bg-white/80 backdrop-blur-md shadow-lg">
+        <div className="container mx-auto px-4 py-2 md:py-4 flex justify-between items-center">
+          <a href="/" className="flex items-center">
             <img
               src="https://ucarecdn.com/8d72dcd1-90b7-44a0-8dc9-7b0ba528e663/-/format/auto/"
               alt="POKEMONBALL logo"
-              className="w-12 h-12 mr-2 hover:rotate-12 transition-transform duration-300"
+              className="w-8 h-8 md:w-12 md:h-12 mr-2 hover:rotate-12 transition-transform duration-300"
             />
-            <div className="text-lg md:text-2xl font-bold text-[#FF0000]">
+            <span className="text-lg md:text-2xl font-bold text-[#FF0000]">
               POKEMONBALL
-            </div>
-          </div>
+            </span>
+          </a>
           <div className="space-x-4">
             <a
-              href="/about"
-              className="text-[#FF0000] hover:text-[#FF3333] transition-colors duration-300"
+              href="/"
+              className="text-sm md:text-base text-[#FF0000] hover:text-[#FF3333] transition-colors duration-300"
             >
-              About
+              Home
             </a>
           </div>
-        </nav>
-      </header>
+        </div>
+      </nav>
       <main className="pt-20">
         <section
           className={`container mx-auto px-4 py-20 text-center transition-all duration-1000 transform ${
