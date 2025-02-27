@@ -1,16 +1,9 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
-  experimental: {
-    esmExternals: 'loose'
-  },
-  webpack: (config) => {
-    config.externals = [...config.externals, { canvas: "canvas" }]; // required to make pdfjs work
-    return config;
-  },
-};
+  output: 'export',
+  trailingSlash: true
+}
 
+module.exports = nextConfig
 
-module.exports = {
-  // Optional: Enable static export
-  exportTrailingSlash: true,
-};
