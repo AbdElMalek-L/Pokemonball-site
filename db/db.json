@@ -1,0 +1,50 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "email": "admin",
+            "pass": "admin"
+        }
+
+        ],
+
+    "exchanges": [
+      {
+        "id": 1,
+        "name": "PancakeSwap",
+        "logo": "https://ucarecdn.com/f086cd73-fa4c-4ef9-a788-471f7a3035ff/-/format/auto/",
+        "status": "coming_soon"
+      },
+      {
+        "id": 2,
+        "name": "KuCoin",
+        "logo": "https://ucarecdn.com/05b65499-2f3f-4403-a975-9ba9f342ec7d/-/format/auto/",
+        "status": "coming_soon"
+      },
+      {
+        "id": 3,
+        "name": "CoinGecko",
+        "logo": "https://ucarecdn.com/90e9c04e-2d15-42f1-b68e-f1ebd80bcc59/-/format/auto/",
+        "status": "coming_soon"
+      },
+      {
+        "id": 4,
+        "name": "Bybit",
+        "logo": "https://ucarecdn.com/e9463237-0071-4f83-88c0-76644c0df554/-/format/auto/",
+        "status": "coming_soon"
+      },
+      {
+        "id": 5,
+        "name": "Crypto.com",
+        "logo": "https://ucarecdn.com/41d325f0-20e6-48a6-89ed-624269ef0497/-/format/auto/",
+        "status": "coming_soon"
+      },
+      {
+        "id": 6,
+        "name": "Binance",
+        "logo": "https://ucarecdn.com/9813e34d-d0c3-43a8-bd8e-22aca99afcda/-/format/auto/",
+        "status": "coming_soon"
+      }
+    ]
+  }
+  
